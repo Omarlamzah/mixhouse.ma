@@ -36,6 +36,8 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
+      integrations:
+        app_store_connect: Codemagic
       ios_signing:
         provisioning_profiles:
           - mixhouse_appstore_profile
@@ -73,3 +75,7 @@ workflows:
       - build/ios/archive/*.xcarchive
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
