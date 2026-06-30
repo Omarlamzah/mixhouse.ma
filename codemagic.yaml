@@ -38,7 +38,7 @@ workflows:
       cocoapods: default
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: ma.mixhouse.mixhouse
+        bundle_identifier: ma.mixhouse.app
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
