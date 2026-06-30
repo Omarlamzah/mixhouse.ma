@@ -37,8 +37,10 @@ workflows:
       xcode: latest
       cocoapods: default
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: ma.mixhouse.app
+        provisioning_profiles:
+          - mixhouse_appstore_profile
+        certificates:
+          - mixhouse_distribution
     cache:
       cache_paths:
         - $FLUTTER_ROOT/.pub-cache
@@ -54,7 +56,9 @@ workflows:
         script: xcode-project use-profiles
       - name: Build signed IPA
         script: |
-          flutter build ipa --release --build-number=$PROJECT_BUILD_NUMBER
+          flutter build ipa --release \
+            --build-number=$PROJECT_BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
           IPA_PATH="$(find "$CM_BUILD_DIR/build/ios" -type f -name '*.ipa' -print -quit)"
           if [ -z "$IPA_PATH" ]; then
             echo "No IPA was generated under build/ios"
