@@ -53,8 +53,19 @@ workflows:
       - name: Apply iOS signing profiles
         script: xcode-project use-profiles
       - name: Build signed IPA
-        script: flutter build ipa --release --build-number=$PROJECT_BUILD_NUMBER
+        script: |
+          flutter build ipa --release --build-number=$PROJECT_BUILD_NUMBER
+          IPA_PATH="$(find "$CM_BUILD_DIR/build/ios" -type f -name '*.ipa' -print -quit)"
+          if [ -z "$IPA_PATH" ]; then
+            echo "No IPA was generated under build/ios"
+            find "$CM_BUILD_DIR/build/ios" -maxdepth 4 -type f -print
+            exit 1
+          fi
+          mkdir -p "$CM_BUILD_DIR/codemagic-artifacts"
+          cp "$IPA_PATH" "$CM_BUILD_DIR/codemagic-artifacts/Mixhouse.ipa"
     artifacts:
+      - codemagic-artifacts/*.ipa
       - build/ios/ipa/*.ipa
+      - build/ios/archive/*.xcarchive
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
